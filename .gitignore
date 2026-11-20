@@ -1,0 +1,24 @@
+# Gradle / build output
+.gradle/
+build/
+/app/build/
+/captures
+.externalNativeBuild
+.cxx
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+.kotlin/
+
+# Local config: contains SDK path and the Perenual API key - NEVER commit
+local.properties
+
+# Signing keys
+*.jks
+*.keystore
+keystore.properties
+
+# OS files
+.DS_Store
+Thumbs.db

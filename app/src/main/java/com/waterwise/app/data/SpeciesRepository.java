@@ -116,8 +116,10 @@ public class SpeciesRepository {
         AppExecutors.io().execute(() -> {
             SpeciesCache cached = dao.getById(apiId);
             if (cached != null && cached.wateringDays != null) {
+                // The cached image url may have expired (24 h): then the
+                // download just fails and the leaf placeholder stays.
                 CareInfo info = new CareInfo(cached.wateringDays, cached.watering,
-                        cached.sunlight, null);
+                        cached.sunlight, cached.imageUrl);
                 mainThread.post(() -> callback.onResult(info));
             } else if (apiId > PerenualApi.FREE_PLAN_MAX_ID) {
                 // Don't waste a request: we know the free plan will refuse it.

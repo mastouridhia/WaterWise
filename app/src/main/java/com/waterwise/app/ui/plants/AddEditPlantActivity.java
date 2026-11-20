@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,8 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.waterwise.app.R;
 import com.waterwise.app.data.Plant;
+import com.waterwise.app.data.SpeciesRepository;
 import com.waterwise.app.databinding.ActivityAddEditPlantBinding;
 import com.waterwise.app.ui.species.SpeciesSearchActivity;
 import com.waterwise.app.util.AppExecutors;
@@ -50,6 +53,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
 
     private ActivityAddEditPlantBinding binding;
     private AddEditPlantViewModel viewModel;
+    private SpeciesRepository speciesRepository;
 
     /** The plant being edited, or null while adding a new one. */
     private Plant plant;
@@ -109,6 +113,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
         EdgeToEdgeUtil.padForSystemBars(binding.mainRoot);
 
         viewModel = new ViewModelProvider(this).get(AddEditPlantViewModel.class);
+        speciesRepository = new SpeciesRepository(this);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         if (savedInstanceState != null) {
@@ -158,10 +163,79 @@ public class AddEditPlantActivity extends AppCompatActivity {
         if (speciesId != null) outState.putInt(STATE_SPECIES_ID, speciesId);
     }
 
-    /** Called when a species was picked in SpeciesSearchActivity. */
+    /**
+     * Called when a species was picked in SpeciesSearchActivity: loads its
+     * care info (cache or Perenual API) and fills the form.
+     */
     private void onSpeciesChosen(int id, String name) {
         speciesId = id;
         binding.inputSpecies.setText(name);
+        binding.careProgress.setVisibility(View.VISIBLE);
+        binding.careInfo.setVisibility(View.VISIBLE);
+        binding.careInfo.setText(R.string.care_loading);
+
+        speciesRepository.getCareInfo(id, new SpeciesRepository.Callback<SpeciesRepository.CareInfo>() {
+            @Override
+            public void onResult(SpeciesRepository.CareInfo info) {
+                if (isDestroyed()) return;
+                binding.careProgress.setVisibility(View.GONE);
+                binding.inputInterval.setText(String.valueOf(info.wateringDays));
+                binding.layoutInterval.setError(null);
+                if (info.sunlight != null) {
+                    binding.inputSunlight.setText(info.sunlight, false);
+                    binding.careInfo.setText(getString(R.string.care_filled,
+                            info.wateringDays, info.sunlight));
+                } else {
+                    binding.careInfo.setText(getString(R.string.care_filled_no_sun,
+                            info.wateringDays));
+                }
+                // Use the species picture if the user has no photo yet.
+                if (photoPath == null && info.imageUrl != null) {
+                    downloadSpeciesImage(info.imageUrl);
+                }
+            }
+
+            @Override
+            public void onError(SpeciesRepository.Error error) {
+                if (isDestroyed()) return;
+                binding.careProgress.setVisibility(View.GONE);
+                binding.careInfo.setText(error == SpeciesRepository.Error.LOCKED
+                        ? R.string.care_manual_message_locked
+                        : R.string.care_manual_message_offline);
+                askWateringLevel();
+            }
+        });
+    }
+
+    /** Fallback when the API has no care data: the user picks a level. */
+    private void askWateringLevel() {
+        int[] days = {3, 7, 14};
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.care_manual_title)
+                .setItems(R.array.watering_levels, (dialog, which) -> {
+                    binding.inputInterval.setText(String.valueOf(days[which]));
+                    binding.layoutInterval.setError(null);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void downloadSpeciesImage(String url) {
+        AppExecutors.io().execute(() -> {
+            try {
+                File file = PhotoStorage.download(getApplicationContext(), url);
+                runOnUiThread(() -> {
+                    // The user may have picked their own photo meanwhile.
+                    if (!isDestroyed() && photoPath == null) {
+                        setPhoto(file.getAbsolutePath());
+                    } else {
+                        PhotoStorage.deleteIfLocal(file.getAbsolutePath());
+                    }
+                });
+            } catch (IOException ignored) {
+                // No picture is not a problem: the leaf placeholder is shown.
+            }
+        });
     }
 
     private void openCamera() {

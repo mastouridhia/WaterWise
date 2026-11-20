@@ -30,8 +30,8 @@ public final class ApiClient {
                     : HttpLoggingInterceptor.Level.NONE);
 
             httpClient = new OkHttpClient.Builder()
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .readTimeout(15, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS) // Perenual can be slow (~20 s)
                     .addInterceptor(logging)
                     .build();
         }

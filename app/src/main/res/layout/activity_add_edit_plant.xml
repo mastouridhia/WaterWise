@@ -92,6 +92,25 @@
                     android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Shown while care info is loading from Perenual -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/care_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <!-- Result of the auto-fill, e.g. "From Perenual: water every 9 days" -->
+            <TextView
+                android:id="@+id/care_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorPrimary"
+                android:visibility="gone" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_interval"
                 android:layout_width="match_parent"

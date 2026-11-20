@@ -1,16 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Pull down to refresh the weather -->
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/today_empty"
-        android:textAppearance="?attr/textAppearanceBodyLarge" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- ===== Weather card ===== -->
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="?attr/colorSecondaryContainer">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Shown when no city is set yet -->
+                    <LinearLayout
+                        android:id="@+id/group_no_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/today_no_city"
+                            android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                        <Button
+                            android:id="@+id/button_set_city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/today_set_city" />
+                    </LinearLayout>
+
+                    <!-- Shown when the weather is known -->
+                    <LinearLayout
+                        android:id="@+id/group_weather"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/weather_emoji"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="12dp"
+                                android:textSize="40sp"
+                                tools:text="🌤️" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/weather_city"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                                    tools:text="Tunis" />
+
+                                <TextView
+                                    android:id="@+id/weather_now"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                                    tools:text="Partly cloudy · 23 °C" />
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/button_change_city"
+                                style="?attr/borderlessButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/today_change_city" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/weather_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            tools:text="Rain (yesterday + today): 0 mm · Max 25 °C · Min 13 °C" />
+
+                        <TextView
+                            android:id="@+id/weather_updated"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textAppearance="?attr/textAppearanceLabelSmall"
+                            tools:text="Updated at 11:45" />
+                    </LinearLayout>
+
+                    <!-- Network error and nothing saved -->
+                    <TextView
+                        android:id="@+id/weather_error"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ===== Alerts ===== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/alert_frost"
+                    style="@style/WaterWise.Alert"
+                    android:backgroundTint="@color/alert_frost_bg"
+                    android:textColor="@color/alert_frost_text"
+                    tools:text="❄️ Frost expected" />
+
+                <TextView
+                    android:id="@+id/alert_heat"
+                    style="@style/WaterWise.Alert"
+                    android:backgroundTint="@color/alert_heat_bg"
+                    android:textColor="@color/alert_heat_text"
+                    tools:text="🔥 Heat wave" />
+
+                <TextView
+                    android:id="@+id/alert_rain"
+                    style="@style/WaterWise.Alert"
+                    android:backgroundTint="@color/alert_rain_bg"
+                    android:textColor="@color/alert_rain_text"
+                    tools:text="🌧️ Rain" />
+
+                <TextView
+                    android:id="@+id/alert_adjusted"
+                    style="@style/WaterWise.Alert"
+                    android:backgroundTint="@color/alert_info_bg"
+                    android:textColor="@color/alert_info_text"
+                    tools:text="✅ 2 outdoor plants adjusted" />
+            </LinearLayout>
+
+            <!-- ===== Plants to water today ===== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/today_to_water"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+            <TextView
+                android:id="@+id/text_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/today_empty"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/due_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_plant" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

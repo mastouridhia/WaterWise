@@ -11,7 +11,8 @@ public final class WeatherCodes {
     public static int description(Integer code) {
         if (code == null) return R.string.weather_unknown;
         if (code == 0) return R.string.weather_clear;
-        if (code <= 3) return R.string.weather_cloudy;
+        if (code <= 2) return R.string.weather_cloudy;
+        if (code == 3) return R.string.weather_overcast;
         if (code == 45 || code == 48) return R.string.weather_fog;
         if (code >= 51 && code <= 57) return R.string.weather_drizzle;
         if (code >= 61 && code <= 67) return R.string.weather_rain;

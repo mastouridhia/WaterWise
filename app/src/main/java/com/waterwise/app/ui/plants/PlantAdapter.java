@@ -2,6 +2,7 @@ package com.waterwise.app.ui.plants;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -26,10 +27,17 @@ public class PlantAdapter extends ListAdapter<Plant, PlantAdapter.ViewHolder> {
     }
 
     private final OnPlantClickListener listener;
+    /** If not null, each row shows a quick "water" button. */
+    private final OnPlantClickListener waterListener;
 
     public PlantAdapter(OnPlantClickListener listener) {
+        this(listener, null);
+    }
+
+    public PlantAdapter(OnPlantClickListener listener, OnPlantClickListener waterListener) {
         super(DIFF);
         this.listener = listener;
+        this.waterListener = waterListener;
     }
 
     @NonNull
@@ -70,6 +78,10 @@ public class PlantAdapter extends ListAdapter<Plant, PlantAdapter.ViewHolder> {
             PlantImages.load(b.image, plant.imageUri);
 
             b.getRoot().setOnClickListener(v -> listener.onPlantClick(plant));
+            b.buttonWater.setVisibility(waterListener != null ? View.VISIBLE : View.GONE);
+            if (waterListener != null) {
+                b.buttonWater.setOnClickListener(v -> waterListener.onPlantClick(plant));
+            }
         }
     }
 

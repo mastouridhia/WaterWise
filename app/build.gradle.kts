@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.fragment)
     implementation(libs.recyclerview)
+    implementation(libs.swiperefreshlayout)
 
     // MVVM: ViewModel + LiveData
     implementation(libs.lifecycle.viewmodel)

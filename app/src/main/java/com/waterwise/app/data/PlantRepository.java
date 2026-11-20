@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 import com.waterwise.app.util.AppExecutors;
 import com.waterwise.app.util.PhotoStorage;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -26,6 +28,13 @@ public class PlantRepository {
 
     public LiveData<List<Plant>> getAllPlants() {
         return plantDao.getAll();
+    }
+
+    /** Plants to water today or overdue (next watering before tonight midnight). */
+    public LiveData<List<Plant>> getDueToday() {
+        long endOfToday = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault())
+                .toInstant().toEpochMilli();
+        return plantDao.getDueBefore(endOfToday);
     }
 
     public LiveData<Plant> getPlant(long id) {

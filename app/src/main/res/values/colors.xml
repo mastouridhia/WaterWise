@@ -11,4 +11,14 @@
     <color name="status_ok">#43A047</color>
     <color name="status_due">#FB8C00</color>
     <color name="status_overdue">#E53935</color>
+
+    <!-- Weather alert banners -->
+    <color name="alert_frost_bg">#E3F2FD</color>
+    <color name="alert_frost_text">#0D47A1</color>
+    <color name="alert_heat_bg">#FFF3E0</color>
+    <color name="alert_heat_text">#BF360C</color>
+    <color name="alert_rain_bg">#E1F5FE</color>
+    <color name="alert_rain_text">#01579B</color>
+    <color name="alert_info_bg">#E8F5E9</color>
+    <color name="alert_info_text">#1B5E20</color>
 </resources>

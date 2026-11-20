@@ -112,6 +112,7 @@
     <!-- Weather (Open-Meteo forecast) -->
     <string name="weather_clear">Clear sky</string>
     <string name="weather_cloudy">Partly cloudy</string>
+    <string name="weather_overcast">Overcast</string>
     <string name="weather_fog">Fog</string>
     <string name="weather_drizzle">Drizzle</string>
     <string name="weather_rain">Rain</string>
@@ -119,6 +120,24 @@
     <string name="weather_showers">Rain showers</string>
     <string name="weather_storm">Thunderstorm</string>
     <string name="weather_unknown">Weather</string>
+    <string name="weather_now">%1$s · %2$s °C</string>
+    <string name="weather_details">Rain (yesterday + today): %1$s mm · Max %2$s °C · Min %3$s °C</string>
+    <string name="weather_updated">Updated at %s · pull down to refresh</string>
+    <string name="weather_offline">Offline: last update %s</string>
+    <string name="weather_unavailable">Weather unavailable: no internet connection. Pull down to retry.</string>
+
+    <!-- Today screen -->
+    <string name="today_no_city">Set your city to get weather-smart watering for your outdoor plants.</string>
+    <string name="today_set_city">Set my city</string>
+    <string name="today_change_city">Change</string>
+    <string name="today_to_water">To water today</string>
+    <string name="alert_frost">❄️ Frost expected (%s °C). Bring your outdoor plants inside or cover them tonight.</string>
+    <string name="alert_heat">🔥 Heat wave (up to %s °C). Outdoor plants dry faster: their watering was moved earlier.</string>
+    <string name="alert_rain">🌧️ %s mm of rain. Outdoor plants due now were watered by the rain.</string>
+    <plurals name="alert_adjusted">
+        <item quantity="one">✅ %d outdoor plant was adjusted to the weather. See its history for details.</item>
+        <item quantity="other">✅ %d outdoor plants were adjusted to the weather. See their history for details.</item>
+    </plurals>
     <string name="log_detail_rain">It rained %s mm: the rain watered it</string>
     <string name="log_detail_heat">Heat wave (%s °C): it dries faster</string>
 

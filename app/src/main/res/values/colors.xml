@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand: leaf green + water blue -->
+    <color name="green_700">#2E7D32</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_900">#1B5E20</color>
+    <color name="blue_600">#0288D1</color>
+    <color name="blue_100">#B3E5FC</color>
+
+    <!-- Plant watering status colors -->
+    <color name="status_ok">#43A047</color>
+    <color name="status_due">#FB8C00</color>
+    <color name="status_overdue">#E53935</color>
+</resources>

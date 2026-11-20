@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.WaterWise" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#81C784</item>
+        <item name="colorOnPrimary">#003910</item>
+        <item name="colorPrimaryContainer">@color/green_900</item>
+        <item name="colorOnPrimaryContainer">@color/green_100</item>
+        <item name="colorSecondary">#4FC3F7</item>
+        <item name="colorOnSecondary">#00344A</item>
+        <item name="colorSecondaryContainer">#01579B</item>
+    </style>
+</resources>

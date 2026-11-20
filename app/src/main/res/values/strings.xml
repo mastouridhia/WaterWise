@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">WaterWise</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_today">Today</string>
+    <string name="nav_plants">My Plants</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Placeholders -->
+    <string name="today_empty">Nothing to water today. Your plants are happy!</string>
+    <string name="plants_empty">No plants yet. Tap + to add your first plant.</string>
 </resources>

@@ -14,8 +14,8 @@
 |-----|-------|--------|
 | 1 | Project setup, dependencies, theme + navigation, database | ✅ Done (2026-11-20) |
 | — | Push to GitHub | ⏳ To do (needs `gh auth login`) |
-| 2 | My Plants list, add/edit plant, photo, plant detail | ⬜ Next |
-| 3 | Perenual API: species search + auto-fill + cache | ⬜ |
+| 2 | My Plants list, add/edit plant, photo, plant detail | ✅ Done (2026-11-20) |
+| 3 | Perenual API: species search + auto-fill + cache | ⬜ Next |
 | 4 | Open-Meteo: city, forecast, Today screen, weather logic | ⬜ |
 | 5 | Daily notifications (WorkManager) + Settings | ⬜ |
 | 6 | Polish, README, signed APK, GitHub release | ⬜ |
@@ -65,19 +65,29 @@ What exists now:
   - `watering_logs`: history (WATERED / SKIPPED_RAIN / ADVANCED_HEAT), deleted with the plant (CASCADE)
   - `species_cache`: Perenual results saved locally (offline search, saves API quota)
 
-### Project structure
+### Project structure (updated after day 2)
 ```
 app/src/main/java/com/waterwise/app/
-├── MainActivity.java            bottom navigation host
-├── data/                        database layer (Room)
-│   ├── AppDatabase.java         singleton database
+├── MainActivity.java              bottom navigation host
+├── data/                          data layer
+│   ├── AppDatabase.java           Room singleton database
+│   ├── PlantRepository.java       single entry point for plant data
 │   ├── Plant.java / PlantDao.java
 │   ├── WateringLog.java / WateringLogDao.java
 │   └── SpeciesCache.java / SpeciesDao.java
-└── ui/
-    ├── today/TodayFragment.java
-    ├── plants/PlantsFragment.java
-    └── settings/SettingsFragment.java
+├── ui/
+│   ├── today/TodayFragment.java
+│   ├── plants/
+│   │   ├── PlantsFragment.java + PlantsViewModel.java + PlantAdapter.java
+│   │   ├── AddEditPlantActivity.java + AddEditPlantViewModel.java
+│   │   └── PlantDetailActivity.java + PlantDetailViewModel.java + WateringLogAdapter.java
+│   └── settings/SettingsFragment.java
+└── util/
+    ├── AppExecutors.java          background thread
+    ├── WateringStatus.java        "Water in 3 days" + status colors
+    ├── PhotoStorage.java          copy / camera file / delete photos
+    ├── PlantImages.java           load photo or leaf placeholder (Glide)
+    └── EdgeToEdgeUtil.java        padding for status/navigation bars
 ```
 
 ---
@@ -95,23 +105,43 @@ After that, just run `git push` at the end of each day.
 
 ---
 
-## ⬜ Day 2 – My Plants (CRUD)
+## ✅ Day 2 – My Plants (CRUD) – Done (2026-11-20)
 
 Goal: add, see, edit, delete plants and mark them as watered.
 
-- [ ] `PlantRepository` (runs DB writes on a background `ExecutorService`)
-- [ ] `PlantsViewModel` exposing `LiveData<List<Plant>>`
-- [ ] `PlantsFragment`: RecyclerView + `PlantAdapter` (photo, name, "water in 2 days", status color: green OK / orange today / red overdue), empty state, FAB "+"
-- [ ] `AddEditPlantActivity`: nickname, species (typed by hand for now), indoor/outdoor switch, watering every N days, sunlight, last watered date (DatePicker), notes, validation
-- [ ] Photo: pick from gallery (Photo Picker) or take with camera, shown with Glide
-- [ ] `PlantDetailActivity`: info, **Water now** button (updates dates + adds a log), history list, edit, delete with confirmation
+- [x] `PlantRepository` (runs DB writes on a background `ExecutorService`)
+- [x] `PlantsViewModel` exposing `LiveData<List<Plant>>`
+- [x] `PlantsFragment`: RecyclerView + `PlantAdapter` (photo, name, "water in 2 days", status color: green OK / orange today / red overdue), empty state, FAB "+"
+- [x] `AddEditPlantActivity`: nickname, species (typed by hand for now), indoor/outdoor switch, watering every N days, sunlight, last watered date (DatePicker), notes, validation
+- [x] Photo: pick from gallery (Photo Picker) or take with camera, shown with Glide
+- [x] `PlantDetailActivity`: info, **Water now** button (updates dates + adds a log), history list, edit, delete with confirmation
 
-Suggested commits:
-1. `Add PlantRepository and PlantsViewModel`
-2. `Show plants list with status colors in RecyclerView`
-3. `Add AddEditPlantActivity form with validation`
-4. `Add plant photo from gallery or camera`
-5. `Add PlantDetailActivity with Water now and history`
+Commits:
+```
+c7e515d Add PlantDetailActivity with Water now, history, edit and delete
+3c29548 Add plant photo from gallery or camera
+0eedaee Add AddEditPlantActivity form with validation and date picker
+67b925d Show plants list with status colors in RecyclerView
+2f0c79f Add PlantRepository, PlantsViewModel and watering status helper
+```
+
+Tested on the Pixel_9 emulator: add plant → appears in list ("Water in 10 days", green)
+→ detail → Water now (history + snackbar) → edit (form pre-filled) → delete (confirmation)
+→ list empty again. No crashes.
+⚠️ Still to test by hand on your phone: **Gallery** and **Camera** photo buttons.
+
+### How it works (for the oral defense)
+- **Status color:** `WateringStatus` compares the next-watering *date* with today
+  (`daysUntil < 0` → red overdue, `0` → orange today, `> 0` → green).
+- **Water now:** `Plant.markWatered()` sets `lastWateredAt = now` and
+  `nextWateringAt = now + interval days`, then a `WateringLog` row is inserted.
+- **Photos:** the Photo Picker needs no storage permission; the picture is copied into
+  the app's private `files/photos/` folder. The camera writes into that folder through a
+  `FileProvider` (a secure `content://` link), so no CAMERA permission is needed either.
+- **Delete:** the `ForeignKey(onDelete = CASCADE)` removes the history automatically,
+  and the photo file is deleted too.
+- **Rotation-safe:** data lives in ViewModels; form state (date, photo) is saved in
+  `onSaveInstanceState`.
 
 ---
 

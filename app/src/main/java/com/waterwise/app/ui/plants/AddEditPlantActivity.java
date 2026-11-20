@@ -65,6 +65,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
     private File cameraFile;
     /** Perenual id of the species chosen in the search, or null. */
     private Integer speciesId;
+    private boolean saved;
 
     // Opens the species search and receives the chosen species.
     private final ActivityResultLauncher<Intent> searchSpecies =
@@ -215,6 +216,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
                 .setItems(R.array.watering_levels, (dialog, which) -> {
                     binding.inputInterval.setText(String.valueOf(days[which]));
                     binding.layoutInterval.setError(null);
+                    binding.careInfo.setText(getString(R.string.care_manual_chosen, days[which]));
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
@@ -353,8 +355,20 @@ public class AddEditPlantActivity extends AppCompatActivity {
         }
 
         viewModel.save(p);
+        saved = true;
         Toast.makeText(this, R.string.plant_saved, Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Leaving without saving: delete the photo picked in this form, so
+        // unused copies don't fill up the storage.
+        if (isFinishing() && !saved && photoPath != null
+                && (plant == null || !photoPath.equals(plant.imageUri))) {
+            PhotoStorage.deleteIfLocal(photoPath);
+        }
     }
 
     private static String text(CharSequence s) {

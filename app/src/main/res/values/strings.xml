@@ -101,6 +101,7 @@
     <string name="care_manual_title">How much water does it need?</string>
     <string name="care_manual_message_locked">Care details for this species are not in the free plan. Choose a watering level:</string>
     <string name="care_manual_message_offline">Care details could not be loaded. Choose a watering level:</string>
+    <string name="care_manual_chosen">Watering every %d days (chosen manually)</string>
     <string-array name="watering_levels">
         <item>Frequent (every 3 days)</item>
         <item>Average (every 7 days)</item>

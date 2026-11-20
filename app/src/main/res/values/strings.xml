@@ -20,4 +20,62 @@
         <item quantity="one">Overdue by %d day</item>
         <item quantity="other">Overdue by %d days</item>
     </plurals>
+
+    <!-- Plants list -->
+    <string name="add_plant">Add plant</string>
+    <string name="indoor">Indoor</string>
+    <string name="outdoor">Outdoor</string>
+    <string name="species_and_location">%1$s · %2$s</string>
+
+    <!-- Add / edit plant -->
+    <string name="edit_plant">Edit plant</string>
+    <string name="save">Save</string>
+    <string name="hint_nickname">Nickname *</string>
+    <string name="hint_species">Species (e.g. Aloe vera)</string>
+    <string name="hint_interval">Water every (days) *</string>
+    <string name="hint_sunlight">Sunlight</string>
+    <string name="hint_last_watered">Last watered</string>
+    <string name="hint_notes">Notes</string>
+    <string name="outdoor_switch">Outdoor plant (adjusted to the weather)</string>
+    <string name="pick_last_watered">When did you last water it?</string>
+    <string name="error_required">Required</string>
+    <string name="error_interval">Enter a number between 1 and 90</string>
+    <string name="plant_saved">Plant saved</string>
+    <string-array name="sunlight_options">
+        <item>Full sun</item>
+        <item>Part sun</item>
+        <item>Part shade</item>
+        <item>Full shade</item>
+    </string-array>
+
+    <!-- Photo -->
+    <string name="photo_gallery">Gallery</string>
+    <string name="photo_camera">Camera</string>
+    <string name="photo_error">Could not load the photo</string>
+    <string name="no_camera_app">No camera app found</string>
+
+    <!-- Plant detail -->
+    <string name="water_now">Water now</string>
+    <string name="watered_snackbar">%s has been watered 💧</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_confirm_title">Delete this plant?</string>
+    <string name="delete_confirm_message">%s and its watering history will be deleted.</string>
+    <string name="detail_location">Location</string>
+    <string name="detail_frequency">Frequency</string>
+    <string name="detail_sunlight">Sunlight</string>
+    <string name="detail_last_watered">Last watered</string>
+    <string name="detail_next_watering">Next watering</string>
+    <string name="detail_notes">Notes</string>
+    <string name="history">Watering history</string>
+    <string name="history_empty">No watering recorded yet.</string>
+    <string name="never">Never</string>
+    <string name="unknown">Unknown</string>
+    <plurals name="every_n_days">
+        <item quantity="one">Every day</item>
+        <item quantity="other">Every %d days</item>
+    </plurals>
+    <string name="log_watered">Watered</string>
+    <string name="log_skipped_rain">Skipped: it rained</string>
+    <string name="log_advanced_heat">Watering moved earlier: heat</string>
 </resources>

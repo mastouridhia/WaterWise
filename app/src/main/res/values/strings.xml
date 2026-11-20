@@ -101,6 +101,27 @@
     <string name="care_manual_title">How much water does it need?</string>
     <string name="care_manual_message_locked">Care details for this species are not in the free plan. Choose a watering level:</string>
     <string name="care_manual_message_offline">Care details could not be loaded. Choose a watering level:</string>
+    <!-- City (Open-Meteo geocoding) -->
+    <string name="city_title">Your city</string>
+    <string name="city_hint">City name (e.g. Tunis)</string>
+    <string name="city_search">Search</string>
+    <string name="city_searching">Searching city…</string>
+    <string name="city_choose">Choose your city</string>
+    <string name="city_not_found">City not found. Check the spelling.</string>
+
+    <!-- Weather (Open-Meteo forecast) -->
+    <string name="weather_clear">Clear sky</string>
+    <string name="weather_cloudy">Partly cloudy</string>
+    <string name="weather_fog">Fog</string>
+    <string name="weather_drizzle">Drizzle</string>
+    <string name="weather_rain">Rain</string>
+    <string name="weather_snow">Snow</string>
+    <string name="weather_showers">Rain showers</string>
+    <string name="weather_storm">Thunderstorm</string>
+    <string name="weather_unknown">Weather</string>
+    <string name="log_detail_rain">It rained %s mm: the rain watered it</string>
+    <string name="log_detail_heat">Heat wave (%s °C): it dries faster</string>
+
     <string name="care_manual_chosen">Watering every %d days (chosen manually)</string>
     <string-array name="watering_levels">
         <item>Frequent (every 3 days)</item>

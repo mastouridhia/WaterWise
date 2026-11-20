@@ -21,6 +21,14 @@ public class SpeciesCache {
     public String watering;
 
     public String sunlight;
+
+    /**
+     * Days between waterings, computed from the details. Null until the
+     * details were downloaded once (added in database version 2).
+     */
+    public Integer wateringDays;
+
+    /** Small image url for lists (signed url, expires after 24 h). */
     public String imageUrl;
     public long cachedAt;
 }

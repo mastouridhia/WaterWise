@@ -16,6 +16,8 @@ public final class ApiClient {
 
     private static OkHttpClient httpClient;
     private static PerenualApi perenualApi;
+    private static OpenMeteoApi.Geocoding geocodingApi;
+    private static OpenMeteoApi.Forecast forecastApi;
 
     private ApiClient() {
     }
@@ -60,5 +62,27 @@ public final class ApiClient {
                     .create(PerenualApi.class);
         }
         return perenualApi;
+    }
+
+    public static synchronized OpenMeteoApi.Geocoding geocoding() {
+        if (geocodingApi == null) {
+            geocodingApi = retrofit(OpenMeteoApi.GEOCODING_URL).create(OpenMeteoApi.Geocoding.class);
+        }
+        return geocodingApi;
+    }
+
+    public static synchronized OpenMeteoApi.Forecast forecast() {
+        if (forecastApi == null) {
+            forecastApi = retrofit(OpenMeteoApi.FORECAST_URL).create(OpenMeteoApi.Forecast.class);
+        }
+        return forecastApi;
+    }
+
+    private static Retrofit retrofit(String baseUrl) {
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(httpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }

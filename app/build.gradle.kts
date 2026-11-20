@@ -55,6 +55,28 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.fragment)
+    implementation(libs.recyclerview)
+
+    // MVVM: ViewModel + LiveData
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.livedata)
+
+    // Local database (SQLite through Room)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
+
+    // Networking for the external APIs (Perenual, Open-Meteo)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
+
+    // Background daily watering check + notifications
+    implementation(libs.work.runtime)
+
+    // Image loading (plant photos)
+    implementation(libs.glide)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

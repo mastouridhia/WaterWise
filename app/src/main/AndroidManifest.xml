@@ -27,6 +27,11 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.species.SpeciesSearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+
+        <activity
             android:name=".ui.plants.PlantDetailActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />

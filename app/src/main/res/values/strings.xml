@@ -32,6 +32,7 @@
     <string name="save">Save</string>
     <string name="hint_nickname">Nickname *</string>
     <string name="hint_species">Species (e.g. Aloe vera)</string>
+    <string name="species_helper">Tap 🔍 to search and auto-fill the care info</string>
     <string name="hint_interval">Water every (days) *</string>
     <string name="hint_sunlight">Sunlight</string>
     <string name="hint_last_watered">Last watered</string>
@@ -78,4 +79,31 @@
     <string name="log_watered">Watered</string>
     <string name="log_skipped_rain">Skipped: it rained</string>
     <string name="log_advanced_heat">Watering moved earlier: heat</string>
+
+    <!-- Species search (Perenual API) -->
+    <string name="search_species">Search species</string>
+    <string name="search_hint">Plant name (e.g. aloe, rose, basil)</string>
+    <string name="search_min_chars">Type at least 3 letters.</string>
+    <string name="search_no_results">No species found. Try another name or enter it manually.</string>
+    <string name="search_offline_cache">You are offline: showing previously saved results.</string>
+    <string name="care_available">Care data available</string>
+    <string name="care_manual">Choose watering manually</string>
+    <string name="powered_by_perenual">Plant data: Perenual.com</string>
+    <string name="error_offline">No internet connection. Check your network and try again.</string>
+    <string name="error_quota">Daily API limit reached. Try again tomorrow or fill the form manually.</string>
+    <string name="error_locked">Care details for this species are not in the free plan.</string>
+    <string name="error_unknown">Something went wrong. Please try again.</string>
+
+    <!-- Auto-fill from species -->
+    <string name="care_loading">Loading care info…</string>
+    <string name="care_filled">From Perenual: water every %1$d days · %2$s</string>
+    <string name="care_filled_no_sun">From Perenual: water every %d days</string>
+    <string name="care_manual_title">How much water does it need?</string>
+    <string name="care_manual_message_locked">Care details for this species are not in the free plan. Choose a watering level:</string>
+    <string name="care_manual_message_offline">Care details could not be loaded. Choose a watering level:</string>
+    <string-array name="watering_levels">
+        <item>Frequent (every 3 days)</item>
+        <item>Average (every 7 days)</item>
+        <item>Minimum (every 14 days)</item>
+    </string-array>
 </resources>

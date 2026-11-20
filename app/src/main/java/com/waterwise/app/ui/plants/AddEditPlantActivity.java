@@ -21,6 +21,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.waterwise.app.R;
 import com.waterwise.app.data.Plant;
 import com.waterwise.app.databinding.ActivityAddEditPlantBinding;
+import com.waterwise.app.ui.species.SpeciesSearchActivity;
 import com.waterwise.app.util.AppExecutors;
 import com.waterwise.app.util.EdgeToEdgeUtil;
 import com.waterwise.app.util.PhotoStorage;
@@ -45,6 +46,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
     private static final String STATE_LAST_WATERED = "last_watered";
     private static final String STATE_PHOTO = "photo";
     private static final String STATE_CAMERA_FILE = "camera_file";
+    private static final String STATE_SPECIES_ID = "species_id";
 
     private ActivityAddEditPlantBinding binding;
     private AddEditPlantViewModel viewModel;
@@ -57,6 +59,20 @@ public class AddEditPlantActivity extends AppCompatActivity {
     private String photoPath;
     /** File the camera app is writing into, while the camera is open. */
     private File cameraFile;
+    /** Perenual id of the species chosen in the search, or null. */
+    private Integer speciesId;
+
+    // Opens the species search and receives the chosen species.
+    private final ActivityResultLauncher<Intent> searchSpecies =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        Intent data = result.getData();
+                        if (result.getResultCode() == RESULT_OK && data != null) {
+                            onSpeciesChosen(
+                                    data.getIntExtra(SpeciesSearchActivity.RESULT_SPECIES_ID, 0),
+                                    data.getStringExtra(SpeciesSearchActivity.RESULT_SPECIES_NAME));
+                        }
+                    });
 
     // Android Photo Picker: no storage permission needed.
     private final ActivityResultLauncher<PickVisualMediaRequest> pickPhoto =
@@ -100,6 +116,9 @@ public class AddEditPlantActivity extends AppCompatActivity {
             photoPath = savedInstanceState.getString(STATE_PHOTO);
             String camera = savedInstanceState.getString(STATE_CAMERA_FILE);
             if (camera != null) cameraFile = new File(camera);
+            if (savedInstanceState.containsKey(STATE_SPECIES_ID)) {
+                speciesId = savedInstanceState.getInt(STATE_SPECIES_ID);
+            }
         }
         showPhoto();
         showLastWatered();
@@ -110,6 +129,8 @@ public class AddEditPlantActivity extends AppCompatActivity {
                         .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                         .build()));
         binding.buttonCamera.setOnClickListener(v -> openCamera());
+        binding.layoutSpecies.setEndIconOnClickListener(v -> searchSpecies.launch(
+                SpeciesSearchActivity.newIntent(this, text(binding.inputSpecies.getText()))));
 
         long plantId = getIntent().getLongExtra(EXTRA_PLANT_ID, 0);
         if (plantId != 0) {
@@ -134,6 +155,13 @@ public class AddEditPlantActivity extends AppCompatActivity {
         outState.putLong(STATE_LAST_WATERED, lastWateredAt);
         outState.putString(STATE_PHOTO, photoPath);
         if (cameraFile != null) outState.putString(STATE_CAMERA_FILE, cameraFile.getAbsolutePath());
+        if (speciesId != null) outState.putInt(STATE_SPECIES_ID, speciesId);
+    }
+
+    /** Called when a species was picked in SpeciesSearchActivity. */
+    private void onSpeciesChosen(int id, String name) {
+        speciesId = id;
+        binding.inputSpecies.setText(name);
     }
 
     private void openCamera() {
@@ -175,6 +203,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
     private void fillForm(Plant p) {
         binding.inputNickname.setText(p.nickname);
         binding.inputSpecies.setText(p.speciesName);
+        speciesId = p.apiSpeciesId;
         binding.inputInterval.setText(String.valueOf(p.wateringIntervalDays));
         binding.inputSunlight.setText(p.sunlight, false);
         binding.switchOutdoor.setChecked(p.outdoor);
@@ -237,6 +266,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
         if (p.id == 0) p.createdAt = System.currentTimeMillis();
         p.nickname = nickname;
         p.speciesName = emptyToNull(text(binding.inputSpecies.getText()));
+        p.apiSpeciesId = p.speciesName != null ? speciesId : null;
         p.wateringIntervalDays = interval;
         p.sunlight = emptyToNull(binding.inputSunlight.getText().toString().trim());
         p.outdoor = binding.switchOutdoor.isChecked();

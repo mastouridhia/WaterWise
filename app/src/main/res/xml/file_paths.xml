@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Folders the FileProvider may share (the camera app writes plant photos here) -->
+<paths>
+    <files-path
+        name="photos"
+        path="photos/" />
+</paths>

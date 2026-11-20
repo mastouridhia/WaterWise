@@ -13,11 +13,11 @@
 | Day | Topic | Status |
 |-----|-------|--------|
 | 1 | Project setup, dependencies, theme + navigation, database | ✅ Done (2026-11-20) |
-| — | Push to GitHub | ⏳ To do (needs `gh auth login`) |
+| — | Push to GitHub | ✅ https://github.com/mastouridhia/WaterWise (run `git push` after each day) |
 | 2 | My Plants list, add/edit plant, photo, plant detail | ✅ Done (2026-11-20) |
 | 3 | Perenual API: species search + auto-fill + cache | ✅ Done (2026-11-20) |
-| 4 | Open-Meteo: city, forecast, Today screen, weather logic | ⬜ Next |
-| 5 | Daily notifications (WorkManager) + Settings | ⬜ |
+| 4 | Open-Meteo: city, forecast, Today screen, weather logic | ✅ Done (2026-11-20) |
+| 5 | Daily notifications (WorkManager) + Settings | ⬜ Next |
 | 6 | Polish, README, signed APK, GitHub release | ⬜ |
 | 7 | Buffer: bug fixes, test on phone, prepare oral defense | ⬜ |
 
@@ -65,7 +65,11 @@ What exists now:
   - `watering_logs`: history (WATERED / SKIPPED_RAIN / ADVANCED_HEAT), deleted with the plant (CASCADE)
   - `species_cache`: Perenual results saved locally (offline search, saves API quota)
 
-### Project structure (updated after day 3)
+### Project structure (updated after day 3 – day 4 added `weather/` and `ui/weather/`)
+```
+weather/   DailyWeather, WeatherAdvisor (rules), WeatherRepository, WeatherReport, WeatherCodes
+ui/today/  TodayFragment + TodayViewModel      ui/weather/CityPicker   util/AppSettings
+```
 ```
 app/src/main/java/com/waterwise/app/
 ├── MainActivity.java              bottom navigation host
@@ -98,16 +102,10 @@ app/src/main/java/com/waterwise/app/
 
 ---
 
-## ⏳ Right now – Push to GitHub
+## ✅ GitHub
 
-1. In a terminal: `gh auth login` → GitHub.com → HTTPS → login with browser.
-2. Create the public repo and push:
-   ```
-   gh repo create WaterWise --public --source=. --push
-   ```
-3. Check on github.com that `local.properties` is **not** there (it holds your API key).
-
-After that, just run `git push` at the end of each day.
+Repo: https://github.com/mastouridhia/WaterWise — `local.properties` (API key) is **not** in the
+repo or its history (checked). Run `git push` at the end of each day.
 
 ---
 
@@ -199,23 +197,43 @@ AddEditPlantActivity ◄── chosen species ── getCareInfo(): cache first,
 
 ---
 
-## ⬜ Day 4 – Weather (Open-Meteo) + Today screen
+## ✅ Day 4 – Weather (Open-Meteo) + Today screen – Done (2026-11-20)
 
 Goal: the "smart" part of the app.
 
-- [ ] `OpenMeteoApi`: geocoding `https://geocoding-api.open-meteo.com/v1/search?name=Tunis`
-      and forecast `https://api.open-meteo.com/v1/forecast?latitude=..&longitude=..&daily=precipitation_sum,temperature_2m_max,temperature_2m_min&past_days=1&timezone=auto`
-- [ ] Save chosen city + lat/lon in `SharedPreferences`
-- [ ] `WeatherAdvisor` class (pure Java, easy to unit-test): input = forecast + plant, output = postpone / advance / frost alert
-- [ ] Apply rules to outdoor plants and write logs (SKIPPED_RAIN / ADVANCED_HEAT)
-- [ ] `TodayFragment`: weather card (city, temp, rain, alert banner) + list of plants due today with quick "Watered" button
-- [ ] Unit tests for `WeatherAdvisor`
+- [x] `OpenMeteoApi`: geocoding (`search?name=Tunis`) + forecast (yesterday → day after tomorrow)
+- [x] City + lat/lon + thresholds saved in `SharedPreferences` (`AppSettings`)
+- [x] `WeatherAdvisor` (pure Java): rain → postpone, heat → advance, frost → alert
+- [x] Rules applied to outdoor plants, history entries SKIPPED_RAIN / ADVANCED_HEAT
+- [x] `TodayFragment`: weather card + alert banners + plants due today with quick 💧 button, pull to refresh
+- [x] 10 unit tests for `WeatherAdvisor` (17 tests in total, all pass)
+- [x] Offline: last forecast saved and shown ("Offline: last update …")
 
-Suggested commits:
-1. `Add Open-Meteo geocoding and forecast API`
-2. `Add WeatherAdvisor rules for rain, heat and frost`
-3. `Build Today screen with weather card and due plants`
-4. `Add unit tests for WeatherAdvisor`
+Commits:
+```
+bc439c4 Build Today screen with weather card, alerts and plants due today
+58bc47b Add WeatherRepository and city picker
+a8ef6eb Add WeatherAdvisor rules for rain, heat and frost, with unit tests
+241229f Add Open-Meteo geocoding and forecast API and app settings
+```
+
+Tested on the emulator **with real weather**:
+- **London** (6 mm rain): outdoor "Balcony rose" due today → postponed to Nov 23,
+  history "Skipped: it rained · It rained 6 mm", banner "1 outdoor plant was adjusted" ✅
+- Pull to refresh again → **not applied twice** ✅
+- **Bergen** (−3 °C): frost alert banner ✅
+- Airplane mode → "Offline: last update …" with the saved forecast ✅
+
+### The weather rules (for the oral defense)
+Only for plants marked **Outdoor**. Thresholds: rain 5 mm, heat 32 °C, frost 2 °C.
+
+| Rule | Condition | Effect | Why it is not applied twice |
+|------|-----------|--------|-----------------------------|
+| 🌧️ Rain | rain yesterday + today ≥ 5 mm, plant due within 1 day, not watered since yesterday | rain counts as a watering: next = now + interval | after it, "last watered" = today, so the condition is false |
+| 🔥 Heat | max temp today/tomorrow ≥ 32 °C | next = last watered + **half** the interval (never in the past) | applied only if it moves the watering to an earlier **day** |
+| ❄️ Frost | min temp today/tomorrow ≤ 2 °C | alert banner only | no change to the schedule |
+
+Demo tip: choose a city where it is raining today (check on open-meteo.com) to show the rain rule live.
 
 ---
 

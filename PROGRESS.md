@@ -15,8 +15,8 @@
 | 1 | Project setup, dependencies, theme + navigation, database | ✅ Done (2026-11-20) |
 | — | Push to GitHub | ⏳ To do (needs `gh auth login`) |
 | 2 | My Plants list, add/edit plant, photo, plant detail | ✅ Done (2026-11-20) |
-| 3 | Perenual API: species search + auto-fill + cache | ⬜ Next |
-| 4 | Open-Meteo: city, forecast, Today screen, weather logic | ⬜ |
+| 3 | Perenual API: species search + auto-fill + cache | ✅ Done (2026-11-20) |
+| 4 | Open-Meteo: city, forecast, Today screen, weather logic | ⬜ Next |
 | 5 | Daily notifications (WorkManager) + Settings | ⬜ |
 | 6 | Polish, README, signed APK, GitHub release | ⬜ |
 | 7 | Buffer: bug fixes, test on phone, prepare oral defense | ⬜ |
@@ -65,13 +65,18 @@ What exists now:
   - `watering_logs`: history (WATERED / SKIPPED_RAIN / ADVANCED_HEAT), deleted with the plant (CASCADE)
   - `species_cache`: Perenual results saved locally (offline search, saves API quota)
 
-### Project structure (updated after day 2)
+### Project structure (updated after day 3)
 ```
 app/src/main/java/com/waterwise/app/
 ├── MainActivity.java              bottom navigation host
+├── network/                       external API (Retrofit)
+│   ├── ApiClient.java             OkHttp + Retrofit, adds the API key
+│   ├── PerenualApi.java           endpoints: species-list, species/details/{id}
+│   └── model/                     JSON classes (Gson)
 ├── data/                          data layer
-│   ├── AppDatabase.java           Room singleton database
+│   ├── AppDatabase.java           Room singleton database (v2 + migration)
 │   ├── PlantRepository.java       single entry point for plant data
+│   ├── SpeciesRepository.java     Perenual API + species cache + errors
 │   ├── Plant.java / PlantDao.java
 │   ├── WateringLog.java / WateringLogDao.java
 │   └── SpeciesCache.java / SpeciesDao.java
@@ -81,8 +86,9 @@ app/src/main/java/com/waterwise/app/
 │   │   ├── PlantsFragment.java + PlantsViewModel.java + PlantAdapter.java
 │   │   ├── AddEditPlantActivity.java + AddEditPlantViewModel.java
 │   │   └── PlantDetailActivity.java + PlantDetailViewModel.java + WateringLogAdapter.java
+│   ├── species/                   SpeciesSearchActivity + ViewModel + SpeciesAdapter
 │   └── settings/SettingsFragment.java
-└── util/
+└── util/                          (+ CareMapper.java: API data → watering days, unit-tested)
     ├── AppExecutors.java          background thread
     ├── WateringStatus.java        "Water in 3 days" + status colors
     ├── PhotoStorage.java          copy / camera file / delete photos
@@ -145,28 +151,51 @@ Tested on the Pixel_9 emulator: add plant → appears in list ("Water in 10 days
 
 ---
 
-## ⬜ Day 3 – Perenual API (species search)
+## ✅ Day 3 – Perenual API (species search) – Done (2026-11-20)
 
 Goal: type "aloe" → pick a species → the form fills itself.
 
-- [ ] Retrofit client + `PerenualApi` interface + response models (Gson)
-- [ ] Search: `GET /api/v2/species-list?key=…&q=aloe`
-- [ ] Details: `GET /api/v2/species/details/{id}?key=…` → `watering`, `sunlight`, `watering_general_benchmark` (e.g. "7-10" days)
-- [ ] Search dialog/screen with results list (name + thumbnail)
-- [ ] Map watering level → days: Frequent = 3, Average = 7, Minimum = 14 (or use the benchmark if present)
-- [ ] Save results in `species_cache`; if offline/API error → search the cache, else manual entry
-- [ ] Error handling: no internet, quota exceeded, empty results (Snackbar/message, never crash)
+- [x] Retrofit client + `PerenualApi` interface + response models (Gson)
+- [x] Search: `GET /api/v2/species-list?q=aloe` (key added by an OkHttp interceptor)
+- [x] Details: `GET /api/v2/species/details/{id}` → `watering`, `sunlight`, `watering_general_benchmark` (e.g. "7-10" days)
+- [x] Search screen with results list (photo, names, "Care data available" / "Choose watering manually" badge)
+- [x] `CareMapper`: benchmark "7-10" → 9 days; else Frequent = 3, Average = 7, Minimum = 14 (+ 7 unit tests)
+- [x] Results saved in `species_cache` (Room migration v1 → v2); offline → search the cache
+- [x] Error handling: offline, quota, locked species, empty results → clear message, never crash
+- [x] Species picture downloaded into app storage when the user has no photo
 
-⚠️ **Free plan limitation (already tested):** details only work for species **id ≤ 3000**.
-For other species (e.g. Monstera, id 5257) the fields contain "Upgrade Plans…".
-→ Detect this and let the user choose *Frequent / Average / Minimum* manually.
-(Good point to mention in the defense: graceful fallback.)
+Commits:
+```
+4603ce5 Auto-fill plant form from Perenual species details
+3e7cd4e Add species search screen using Perenual API
+57b7eb0 Add SpeciesRepository with local cache and offline fallback
+05ca198 Add CareMapper to convert Perenual care data, with unit tests
+d9b4f33 Add Retrofit client and Perenual API models
+```
 
-Suggested commits:
-1. `Add Retrofit client and Perenual API models`
-2. `Add species search screen using Perenual API`
-3. `Auto-fill plant form from species details`
-4. `Cache species locally and handle API errors offline`
+Tested on the emulator:
+- "aloe vera" → pick *Aloe vera* → form filled: **every 9 days · Full sun** + photo ✅
+- "monstera" → *Swiss cheese plant* (locked) → watering-level dialog, **no API request wasted** ✅
+- Airplane mode: "aloe" → cached results + "You are offline" message; "cactus" → "No internet connection" ✅
+- `./gradlew test` → 7/7 tests pass ✅
+
+### Things learned about the Perenual free plan (good for the oral defense)
+| Fact | How the app handles it |
+|------|------------------------|
+| Details only for species **id ≤ 3000**; others answer **HTTP 429** with a text body | `FREE_PLAN_MAX_ID`: locked species are never requested → manual Frequent/Average/Minimum dialog |
+| ~100 requests/day | Search only on "search" key (not every letter) + details cached per species |
+| Image urls are **signed and expire after 24 h** | The picture is **downloaded** into the app's private folder, not saved as a url |
+| Sometimes slow (~20 s) | Read timeout raised to 30 s + progress bar |
+| `sunlight` format may vary | Parsed as `JsonElement` (string or list) so parsing can't crash |
+
+### How it works (data flow)
+```
+SpeciesSearchActivity ──► SpeciesSearchViewModel ──► SpeciesRepository ──► Retrofit (PerenualApi)
+                                                         │   ▲                   │ fails?
+                                                         ▼   │                   ▼
+                                                     Room species_cache ◄── fallback search
+AddEditPlantActivity ◄── chosen species ── getCareInfo(): cache first, then API, else manual dialog
+```
 
 ---
 

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +28,7 @@ public class PlantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         PlantAdapter adapter = new PlantAdapter(plant ->
-                Toast.makeText(requireContext(), plant.nickname, Toast.LENGTH_SHORT).show());
+                startActivity(PlantDetailActivity.newIntent(requireContext(), plant.id)));
         binding.recycler.setAdapter(adapter);
 
         PlantsViewModel viewModel = new ViewModelProvider(this).get(PlantsViewModel.class);

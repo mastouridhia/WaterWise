@@ -26,6 +26,11 @@
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".ui.plants.PlantDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
         <!-- Gives the camera app temporary access to our private photo file -->
         <provider
             android:name="androidx.core.content.FileProvider"

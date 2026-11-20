@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.waterwise.app.R;
 import com.waterwise.app.data.Plant;
 import com.waterwise.app.databinding.ItemPlantBinding;
+import com.waterwise.app.util.PlantImages;
 import com.waterwise.app.util.WateringStatus;
 
 /**
@@ -67,13 +67,7 @@ public class PlantAdapter extends ListAdapter<Plant, PlantAdapter.ViewHolder> {
             b.status.setTextColor(color);
             b.statusStrip.setBackgroundColor(color);
 
-            Glide.with(b.image)
-                    .load(plant.imageUri)
-                    .placeholder(R.drawable.ic_plant_placeholder)
-                    .fallback(R.drawable.ic_plant_placeholder)
-                    .error(R.drawable.ic_plant_placeholder)
-                    .centerCrop()
-                    .into(b.image);
+            PlantImages.load(b.image, plant.imageUri);
 
             b.getRoot().setOnClickListener(v -> listener.onPlantClick(plant));
         }

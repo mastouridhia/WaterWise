@@ -15,7 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -25,6 +24,7 @@ import com.waterwise.app.databinding.ActivityAddEditPlantBinding;
 import com.waterwise.app.util.AppExecutors;
 import com.waterwise.app.util.EdgeToEdgeUtil;
 import com.waterwise.app.util.PhotoStorage;
+import com.waterwise.app.util.PlantImages;
 import com.waterwise.app.util.WateringStatus;
 
 import java.io.File;
@@ -100,8 +100,8 @@ public class AddEditPlantActivity extends AppCompatActivity {
             photoPath = savedInstanceState.getString(STATE_PHOTO);
             String camera = savedInstanceState.getString(STATE_CAMERA_FILE);
             if (camera != null) cameraFile = new File(camera);
-            showPhoto();
         }
+        showPhoto();
         showLastWatered();
         binding.inputLastWatered.setOnClickListener(v -> pickLastWateredDate());
 
@@ -169,13 +169,7 @@ public class AddEditPlantActivity extends AppCompatActivity {
     }
 
     private void showPhoto() {
-        Glide.with(this)
-                .load(photoPath)
-                .placeholder(R.drawable.ic_plant_placeholder)
-                .fallback(R.drawable.ic_plant_placeholder)
-                .error(R.drawable.ic_plant_placeholder)
-                .centerCrop()
-                .into(binding.image);
+        PlantImages.load(binding.image, photoPath);
     }
 
     private void fillForm(Plant p) {

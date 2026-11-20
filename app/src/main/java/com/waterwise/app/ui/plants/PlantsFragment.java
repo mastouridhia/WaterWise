@@ -39,7 +39,7 @@ public class PlantsFragment extends Fragment {
         });
 
         binding.fabAdd.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Coming next", Toast.LENGTH_SHORT).show());
+                startActivity(AddEditPlantActivity.newIntent(requireContext())));
     }
 
     @Override

@@ -185,10 +185,10 @@ public class AddEditPlantActivity extends AppCompatActivity {
                 if (info.sunlight != null) {
                     binding.inputSunlight.setText(info.sunlight, false);
                     binding.careInfo.setText(getString(R.string.care_filled,
-                            info.wateringDays, info.sunlight));
+                            everyNDays(info.wateringDays), info.sunlight));
                 } else {
                     binding.careInfo.setText(getString(R.string.care_filled_no_sun,
-                            info.wateringDays));
+                            everyNDays(info.wateringDays)));
                 }
                 // Use the species picture if the user has no photo yet.
                 if (photoPath == null && info.imageUrl != null) {
@@ -208,6 +208,11 @@ public class AddEditPlantActivity extends AppCompatActivity {
         });
     }
 
+    /** "Every day" / "Every 9 days" (plural rules). */
+    private String everyNDays(int days) {
+        return getResources().getQuantityString(R.plurals.every_n_days, days, days);
+    }
+
     /** Fallback when the API has no care data: the user picks a level. */
     private void askWateringLevel() {
         int[] days = {3, 7, 14};
@@ -216,7 +221,8 @@ public class AddEditPlantActivity extends AppCompatActivity {
                 .setItems(R.array.watering_levels, (dialog, which) -> {
                     binding.inputInterval.setText(String.valueOf(days[which]));
                     binding.layoutInterval.setError(null);
-                    binding.careInfo.setText(getString(R.string.care_manual_chosen, days[which]));
+                    binding.careInfo.setText(getString(R.string.care_manual_chosen,
+                            everyNDays(days[which])));
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();

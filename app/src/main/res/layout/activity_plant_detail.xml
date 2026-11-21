@@ -140,8 +140,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/water_now"
+        android:textColor="?attr/colorOnSecondary"
         app:backgroundTint="?attr/colorSecondary"
         app:icon="@drawable/ic_water_drop"
+        app:iconTint="?attr/colorOnSecondary"
         app:iconGravity="textStart" />
 
 </LinearLayout>

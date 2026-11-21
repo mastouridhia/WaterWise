@@ -96,8 +96,8 @@
 
     <!-- Auto-fill from species -->
     <string name="care_loading">Loading care info…</string>
-    <string name="care_filled">From Perenual: water every %1$d days · %2$s</string>
-    <string name="care_filled_no_sun">From Perenual: water every %d days</string>
+    <string name="care_filled">From Perenual: %1$s · %2$s</string>
+    <string name="care_filled_no_sun">From Perenual: %s</string>
     <string name="care_manual_title">How much water does it need?</string>
     <string name="care_manual_message_locked">Care details for this species are not in the free plan. Choose a watering level:</string>
     <string name="care_manual_message_offline">Care details could not be loaded. Choose a watering level:</string>
@@ -181,7 +181,7 @@
     <string name="log_detail_rain">It rained %s mm: the rain watered it</string>
     <string name="log_detail_heat">Heat wave (%s °C): it dries faster</string>
 
-    <string name="care_manual_chosen">Watering every %d days (chosen manually)</string>
+    <string name="care_manual_chosen">%s (chosen manually)</string>
     <string-array name="watering_levels">
         <item>Frequent (every 3 days)</item>
         <item>Average (every 7 days)</item>

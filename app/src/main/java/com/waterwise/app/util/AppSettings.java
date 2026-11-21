@@ -20,6 +20,9 @@ public class AppSettings {
     private static final String KEY_RAIN_MM = "rain_mm";
     private static final String KEY_HEAT_C = "heat_c";
     private static final String KEY_FROST_C = "frost_c";
+    private static final String KEY_REMINDER_ON = "reminder_on";
+    private static final String KEY_REMINDER_HOUR = "reminder_hour";
+    private static final String KEY_REMINDER_MINUTE = "reminder_minute";
     private static final String KEY_LAST_FORECAST = "last_forecast_json";
     private static final String KEY_LAST_FORECAST_AT = "last_forecast_at";
 
@@ -83,6 +86,28 @@ public class AppSettings {
 
     public void setFrostThresholdC(float value) {
         prefs.edit().putFloat(KEY_FROST_C, value).apply();
+    }
+
+    // ---- Daily reminder ----
+
+    public boolean isReminderEnabled() {
+        return prefs.getBoolean(KEY_REMINDER_ON, true);
+    }
+
+    public void setReminderEnabled(boolean enabled) {
+        prefs.edit().putBoolean(KEY_REMINDER_ON, enabled).apply();
+    }
+
+    public int getReminderHour() {
+        return prefs.getInt(KEY_REMINDER_HOUR, 8);
+    }
+
+    public int getReminderMinute() {
+        return prefs.getInt(KEY_REMINDER_MINUTE, 0);
+    }
+
+    public void setReminderTime(int hour, int minute) {
+        prefs.edit().putInt(KEY_REMINDER_HOUR, hour).putInt(KEY_REMINDER_MINUTE, minute).apply();
     }
 
     // ---- Last forecast (shown when offline) ----

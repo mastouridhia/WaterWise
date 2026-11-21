@@ -138,6 +138,20 @@
         <item quantity="one">✅ %d outdoor plant was adjusted to the weather. See its history for details.</item>
         <item quantity="other">✅ %d outdoor plants were adjusted to the weather. See their history for details.</item>
     </plurals>
+    <!-- Notifications -->
+    <string name="channel_name">Watering reminders</string>
+    <string name="channel_description">Daily reminder of the plants to water and weather alerts</string>
+    <plurals name="notif_title_due">
+        <item quantity="one">💧 %d plant needs water today</item>
+        <item quantity="other">💧 %d plants need water today</item>
+    </plurals>
+    <string name="notif_title_none">🌱 WaterWise weather update</string>
+    <string name="notif_frost">❄️ Frost expected: protect your outdoor plants tonight.</string>
+    <plurals name="notif_adjusted">
+        <item quantity="one">🌦️ %d outdoor plant was adjusted to the weather.</item>
+        <item quantity="other">🌦️ %d outdoor plants were adjusted to the weather.</item>
+    </plurals>
+
     <string name="log_detail_rain">It rained %s mm: the rain watered it</string>
     <string name="log_detail_heat">Heat wave (%s °C): it dries faster</string>
 

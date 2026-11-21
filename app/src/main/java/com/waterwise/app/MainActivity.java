@@ -1,10 +1,16 @@
 package com.waterwise.app;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -14,6 +20,7 @@ import com.waterwise.app.databinding.ActivityMainBinding;
 import com.waterwise.app.ui.plants.PlantsFragment;
 import com.waterwise.app.ui.settings.SettingsFragment;
 import com.waterwise.app.ui.today.TodayFragment;
+import com.waterwise.app.util.AppSettings;
 
 /**
  * Hosts the three main screens (Today, My Plants, Settings) and switches
@@ -44,9 +51,26 @@ public class MainActivity extends AppCompatActivity {
         // restores the current fragment itself.
         if (savedInstanceState == null) {
             binding.bottomNav.setSelectedItemId(R.id.nav_today);
+            askNotificationPermission();
         } else {
             binding.toolbar.setTitle(binding.bottomNav.getMenu()
                     .findItem(binding.bottomNav.getSelectedItemId()).getTitle());
+        }
+    }
+
+    // Result of the system "Allow notifications?" dialog. If refused, the
+    // Settings screen explains how to enable them later.
+    private final ActivityResultLauncher<String> notificationPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+            });
+
+    /** Android 13+: notifications need a runtime permission. */
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && new AppSettings(this).isReminderEnabled()
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 

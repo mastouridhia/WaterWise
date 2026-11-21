@@ -138,6 +138,32 @@
         <item quantity="one">✅ %d outdoor plant was adjusted to the weather. See its history for details.</item>
         <item quantity="other">✅ %d outdoor plants were adjusted to the weather. See their history for details.</item>
     </plurals>
+    <!-- Settings -->
+    <string name="settings_section_weather">Weather</string>
+    <string name="settings_city">City: %s</string>
+    <string name="settings_city_none">No city set</string>
+    <string name="settings_section_reminder">Daily reminder</string>
+    <string name="settings_reminder_switch">Remind me to water my plants</string>
+    <string name="settings_reminder_time">Every day at %s</string>
+    <string name="settings_reminder_off">Reminder turned off</string>
+    <string name="settings_change_time">Change time</string>
+    <string name="settings_pick_time">Reminder time</string>
+    <string name="settings_test_notification">Check now and send the notification</string>
+    <string name="settings_test_sent">Checking your plants and the weather… the notification will appear in a few seconds (only if something needs your attention).</string>
+    <string name="settings_permission_blocked">Notifications are blocked for WaterWise, so you will not get reminders.</string>
+    <string name="settings_open_system">Allow notifications</string>
+    <string name="settings_section_rules">Weather rules (outdoor plants)</string>
+    <string name="settings_rules_info">Choose when the weather changes the watering of your outdoor plants.</string>
+    <string name="settings_rain_label">Rain that counts as a watering: %s mm</string>
+    <string name="settings_heat_label">Heat wave (water earlier) from: %s °C</string>
+    <string name="settings_frost_label">Frost alert at or below: %s °C</string>
+    <string name="settings_rain_desc">Rain threshold in millimeters</string>
+    <string name="settings_heat_desc">Heat wave threshold in degrees Celsius</string>
+    <string name="settings_frost_desc">Frost threshold in degrees Celsius</string>
+    <string name="settings_reset_rules">Reset to defaults</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_about">WaterWise %s\nWeather-aware watering reminders for your plants.\n\nPlant data: Perenual.com\nWeather data: Open-Meteo.com (CC BY 4.0)</string>
+
     <!-- Notifications -->
     <string name="channel_name">Watering reminders</string>
     <string name="channel_description">Daily reminder of the plants to water and weather alerts</string>

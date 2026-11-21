@@ -1,14 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/nav_settings"
-        android:textAppearance="?attr/textAppearanceBodyLarge" />
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <!-- The two focus attributes above stop the page from jumping
+             down to the switch when it opens. -->
 
-</FrameLayout>
+        <!-- ===== Weather ===== -->
+        <TextView
+            style="@style/WaterWise.SectionTitle"
+            android:text="@string/settings_section_weather" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_city"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                tools:text="City: Tunis" />
+
+            <Button
+                android:id="@+id/button_city"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/today_change_city" />
+        </LinearLayout>
+
+        <!-- ===== Daily reminder ===== -->
+        <TextView
+            style="@style/WaterWise.SectionTitle"
+            android:text="@string/settings_section_reminder" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switch_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_reminder_switch" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_reminder_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                tools:text="Every day at 08:00" />
+
+            <Button
+                android:id="@+id/button_time"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_change_time" />
+        </LinearLayout>
+
+        <!-- Shown when the user refused notifications -->
+        <TextView
+            android:id="@+id/text_permission"
+            style="@style/WaterWise.Alert"
+            android:backgroundTint="@color/alert_heat_bg"
+            android:text="@string/settings_permission_blocked"
+            android:textColor="@color/alert_heat_text" />
+
+        <Button
+            android:id="@+id/button_open_notif_settings"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_open_system"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_test"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/settings_test_notification" />
+
+        <!-- ===== Weather rules ===== -->
+        <TextView
+            style="@style/WaterWise.SectionTitle"
+            android:text="@string/settings_section_rules" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_rules_info"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <TextView
+            android:id="@+id/label_rain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="Rain that counts as a watering: 5 mm" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_rain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings_rain_desc"
+            android:stepSize="1"
+            android:valueFrom="1"
+            android:valueTo="20" />
+
+        <TextView
+            android:id="@+id/label_heat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="Heat wave from: 32 °C" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_heat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings_heat_desc"
+            android:stepSize="1"
+            android:valueFrom="25"
+            android:valueTo="45" />
+
+        <TextView
+            android:id="@+id/label_frost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            tools:text="Frost alert below: 2 °C" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_frost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/settings_frost_desc"
+            android:stepSize="1"
+            android:valueFrom="-5"
+            android:valueTo="10" />
+
+        <Button
+            android:id="@+id/button_reset_rules"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_reset_rules" />
+
+        <!-- ===== About ===== -->
+        <TextView
+            style="@style/WaterWise.SectionTitle"
+            android:text="@string/settings_section_about" />
+
+        <TextView
+            android:id="@+id/text_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            tools:text="WaterWise 1.0" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

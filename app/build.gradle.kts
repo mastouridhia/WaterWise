@@ -11,6 +11,12 @@ val localProps = Properties().apply {
     if (f.exists()) f.inputStream().use { load(it) }
 }
 
+// Release signing key, also kept out of git (keystore.properties).
+val keystoreProps = Properties().apply {
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
 android {
     namespace = "com.waterwise.app"
     compileSdk = 36
@@ -31,8 +37,22 @@ android {
         )
     }
 
+    signingConfigs {
+        create("release") {
+            if (!keystoreProps.isEmpty) {
+                storeFile = file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            // Without keystore.properties (e.g. on another computer) the
+            // release build is simply left unsigned.
+            if (!keystoreProps.isEmpty) signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

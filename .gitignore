@@ -9,6 +9,7 @@ build/
 # Android Studio / IntelliJ
 *.iml
 .idea/
+.vscode/
 .kotlin/
 
 # Local config: contains SDK path and the Perenual API key - NEVER commit
@@ -22,3 +23,6 @@ keystore.properties
 # OS files
 .DS_Store
 Thumbs.db
+
+# Built APKs copied for delivery (attached to the GitHub release instead)
+/release/

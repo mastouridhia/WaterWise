@@ -17,9 +17,9 @@
 | 2 | My Plants list, add/edit plant, photo, plant detail | ✅ Done (2026-11-20) |
 | 3 | Perenual API: species search + auto-fill + cache | ✅ Done (2026-11-20) |
 | 4 | Open-Meteo: city, forecast, Today screen, weather logic | ✅ Done (2026-11-20) |
-| 5 | Daily notifications (WorkManager) + Settings | ⬜ Next |
-| 6 | Polish, README, signed APK, GitHub release | ⬜ |
-| 7 | Buffer: bug fixes, test on phone, prepare oral defense | ⬜ |
+| 5 | Daily notifications (WorkManager) + Settings | ✅ Done (2026-11-21) |
+| 6 | Polish, README, signed APK, GitHub release | ✅ Done (2026-11-21) — release upload needs `gh auth login` |
+| 7 | Buffer: bug fixes, test on phone, prepare oral defense | ✅ Guide written: `docs/DEFENSE.md` — test on your phone |
 
 ---
 
@@ -237,44 +237,48 @@ Demo tip: choose a city where it is raining today (check on open-meteo.com) to s
 
 ---
 
-## ⬜ Day 5 – Notifications + Settings
+## ✅ Day 5 – Notifications + Settings – Done (2026-11-21)
 
-- [ ] Notification channel + `POST_NOTIFICATIONS` permission request (Android 13+)
-- [ ] `DailyCheckWorker` (WorkManager, periodic 24 h): fetch weather → apply rules → notify "3 plants need water today" / frost alert
-- [ ] Tapping the notification opens the Today screen
-- [ ] `SettingsFragment`: city search, notification time, rain threshold, heat threshold, enable/disable notifications
-- [ ] Re-schedule worker when settings change
+- [x] Notification channel (`WaterWiseApp`) + `POST_NOTIFICATIONS` asked at runtime (Android 13+)
+- [x] `DailyCheckWorker` (WorkManager, every day): weather refresh + rules, then notification
+      "💧 2 plants need water today" / frost / adjusted plants; tap opens the app
+- [x] `ReminderScheduler`: unique periodic work at the chosen time (default 08:00)
+- [x] `SettingsFragment`: city, reminder on/off + time picker, **Check now** button,
+      warning if notifications are blocked, sliders for rain/heat/frost thresholds, About
 
-Suggested commits:
-1. `Add notification channel and permission request`
-2. `Add DailyCheckWorker with WorkManager`
-3. `Add settings screen for city, time and thresholds`
+Commits: `1f3f570` daily reminder · `da8ba96` Settings screen
 
----
-
-## ⬜ Day 6 – Polish + delivery
-
-- [ ] Fix UI details (margins, empty states, icons, texts in `strings.xml`)
-- [ ] Test on emulator **and** on your phone (rotation, no internet, delete plant, etc.)
-- [ ] `README.md`: description, features, screenshots, APIs used, how to build (add your own key in `local.properties`)
-- [ ] Generate signed release APK: Android Studio → *Build → Generate Signed App Bundle / APK → APK* (keep the `.jks` file **out of git**)
-- [ ] GitHub Release `v1.0` with the APK attached:
-      `gh release create v1.0 app/release/app-release.apk --title "WaterWise v1.0"`
-
-Optional extras if time remains: watering streak / plant health score, home-screen widget, French translation.
+Tested: permission dialog shown, "Check now" → real notification
+"🌱 WaterWise weather update · ❄️ Frost expected" (Bergen), WorkManager job registered.
 
 ---
 
-## ⬜ Day 7 – Buffer + oral defense prep
+## ✅ Day 6 – Polish + delivery – Done (2026-11-21)
 
-Be ready to explain:
-- **Architecture:** Activity/Fragment → ViewModel (LiveData) → Repository → Room DAO / Retrofit API
-- **Why Room:** local SQLite, works offline, LiveData updates the UI automatically
-- **Why WorkManager:** reliable background work even if the app is closed or phone restarts
-- **Why the key is in `local.properties`:** never publish secrets on a public repo
-- **Weather rules:** show `WeatherAdvisor` and its tests
-- **API fallback:** Perenual free plan limit → cache + manual choice
-- Demo scenario: add an outdoor plant → set city → show rain postponing the watering → notification
+- [x] Android lint: **0 errors**; fixed plurals ("Every 1 day"); remaining warnings are only
+      newer library versions (not upgraded on purpose, to avoid risk before the deadline)
+- [x] Dark mode checked; placeholder leaf contrast and Water-now button colors fixed
+- [x] Settings page no longer opens scrolled down
+- [x] `README.md` with problem, features, weather rules, 7 screenshots (`docs/screenshots/`),
+      APIs, architecture, build guide
+- [x] **Signed release APK**: `release/WaterWise-v1.0.apk` (6.4 MB, verified with apksigner,
+      installed and tested on the emulator incl. the Perenual API)
+- [ ] **GitHub Release** with the APK — needs `gh auth login` first, then:
+      `gh release create v1.0 release/WaterWise-v1.0.apk --title "WaterWise v1.0" --notes "First release"`
+
+Commits: `a54c4ed` polish · `8f48a61` release signing · `5960d8f` README
+
+⚠️ **Keystore:** `D:\school\dev\waterwise-keystore\waterwise-release.jks` (+ `keystore.properties.backup`
+with the password). It is NOT in git. Back it up (USB/cloud): without it you can't sign updates.
+
+---
+
+## ✅ Day 7 – Oral defense prep
+
+- [x] `docs/DEFENSE.md`: 1-minute pitch (EN + FR), demo script, where each feature is in the
+      code, ~15 likely questions with short answers, limits & improvements, checklist
+- [ ] Install the APK on **your phone** and run the demo once (also test Gallery/Camera photos)
+- [ ] Re-read `docs/DEFENSE.md` sections 3 and 4
 
 ---
 
